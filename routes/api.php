@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 #public routes
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/getallchallenges','ChallengeController@get_all_challenges');
 
 #protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {

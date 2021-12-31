@@ -139,6 +139,35 @@ class ChallengeController extends Controller
 
     }
 
+    public function get_all_challenges(){
+
+        
+        $challenges = Challenge::all();
+        $userchallenges = [];
+        foreach($challenges as $challenge){
+            $challenge_id = $challenge->id;
+
+            $actions = Action::where('challenge_id',$challenge_id)->get();
+            $challenge['actions'] = $actions;
+            foreach($actions as $action){
+                $action_id = $action->id;
+                $tracking = Tracking::where('action_id',$action->id)->get();
+
+                $action['trackings'] = $tracking;
+            }
+
+
+            array_push($userchallenges,$challenge);
+        }
+
+        $response = [
+            'challenges' => $userchallenges
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
