@@ -21,7 +21,15 @@ Route::post('/login', [AuthController::class, 'login']);
 #protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    
+    #profile
     Route::resource('userprofile','UserProfileController');  
+
+    #challenges
+    Route::resource('challenge','ChallengeController');  
+    Route::resource('action','ActionController');
+    Route::resource('tracking','TrackingController');
+    Route::get('/userchallenge/{user_id}','ChallengeController@get_challenge_by_user');
 });
 
 
