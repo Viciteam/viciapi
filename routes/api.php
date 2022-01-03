@@ -31,6 +31,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('action','ActionController');
     Route::resource('tracking','TrackingController');
     Route::get('/userchallenge/{user_id}','ChallengeController@get_challenge_by_user');
+
+    #Friend List
+    Route::resource('friendlist','FriendlistController');  
+    Route::post('/friend/approve/{request_id}','FriendlistController@approve_request');
+    Route::post('/friend/follow','FriendlistController@follow_user');
 });
 
 
