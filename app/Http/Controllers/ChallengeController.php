@@ -188,7 +188,17 @@ class ChallengeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       
+        
+        $challenge = Challenge::where('id',$id);
+        
+
+        $response = [
+            'challenges' => $userchallenges
+        ];
+        $code = 200;
+
+        return response($response, $code);
     }
 
     /**
