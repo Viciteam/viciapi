@@ -18,22 +18,23 @@ use App\Http\Controllers\AuthController;
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/getallchallenges','ChallengeController@get_all_challenges');
+Route::post('/uploadFile','uploadController@upload');
 
 #protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     #profile
-    Route::resource('userprofile','UserProfileController');  
+    Route::resource('userprofile','UserProfileController');
 
     #challenges
-    Route::resource('challenge','ChallengeController');  
+    Route::resource('challenge','ChallengeController');
     Route::resource('action','ActionController');
     Route::resource('tracking','TrackingController');
     Route::get('/userchallenge/{user_id}','ChallengeController@get_challenge_by_user');
 
     #Friend List
-    Route::resource('friendlist','FriendlistController');  
+    Route::resource('friendlist','FriendlistController');
     Route::post('/friend/approve/{request_id}','FriendlistController@approve_request');
     Route::post('/friend/follow','FriendlistController@follow_user');
 });
