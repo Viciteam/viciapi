@@ -32,7 +32,7 @@ class uploadController extends Controller
       "image_url" => Storage::disk('public')->url($image_uploaded_path),
       "mime" => $image->getClientMimeType()
     );
-    $code = 500;
+    $code = 200;
 
     return response($response, $code);
   }
