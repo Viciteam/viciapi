@@ -21,7 +21,6 @@ class UserProfile extends Model
         'bio',
         'mission',
         'country',
+        'profile_banner_link',
     ];
 }
-
-

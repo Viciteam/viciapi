@@ -38,7 +38,7 @@ class UserProfileController extends Controller
         $data = $request->all();
 
         $data['user_id'] = auth()->user()->id;
-        
+
         #check if profile exists, if not, create one. if it does, just edit the currentvalues
 
         $profexists = UserProfile::where('user_id',$data['user_id'])->first();
@@ -57,6 +57,7 @@ class UserProfileController extends Controller
             $userProfile->bio = $data['bio'];
             $userProfile->mission = $data['mission'];
             $userProfile->country = $data['country'];
+            $userProfile->profile_banner_link = $data['profile_banner_link'];
 
             $userProfile->update();
 
@@ -78,7 +79,8 @@ class UserProfileController extends Controller
                 'bday' => $data['bday'],
                 'bio' => $data['bio'],
                 'mission' => $data['mission'],
-                'country' => $data['country']
+                'country' => $data['country'],
+                'profile_banner_link' => $data['profile_banner_link']
 
             ]);
 
