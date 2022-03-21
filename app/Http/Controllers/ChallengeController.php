@@ -139,6 +139,37 @@ class ChallengeController extends Controller
 
     }
 
+    public function get_challenge_template_per_user($id){
+        $user_id = $id;
+        
+        $challenges = Challenge::where('owner_id',$user_id)
+                    ->where('is_template','yes')
+                    ->get();
+        $userchallenges = [];
+        foreach($challenges as $challenge){
+            $challenge_id = $challenge->id;
+
+            $actions = Action::where('challenge_id',$challenge_id)->get();
+            $challenge['actions'] = $actions;
+            foreach($actions as $action){
+                $action_id = $action->id;
+                $tracking = Tracking::where('action_id',$action->id)->get();
+
+                $action['trackings'] = $tracking;
+            }
+
+
+            array_push($userchallenges,$challenge);
+        }
+
+        $response = [
+            'challenges' => $userchallenges
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+
     public function get_all_challenges(){
 
         
@@ -189,12 +220,29 @@ class ChallengeController extends Controller
     public function update(Request $request, $id)
     {
        
+        $data = $request->all();
+        $challenge = Challenge::find($id);
         
-        $challenge = Challenge::where('id',$id);
-        
+        $challenge->name = $data['name'];
+        $challenge->description= $data['description'];
+        $challenge->is_template= $data['is_template'];
+        $challenge->owner_id= $data['owner_id'];
+        $challenge->save();
 
+        $challenge_id = $challenge['id'];
+        $cdetails = [];
+        foreach($data['details'] as $detail){
+            $challengedetail = ChallengeDetail::create([
+                'challenge_id' => $challenge_id,
+                'field' => $detail['field'],
+                'data' => $detail['data']
+    
+            ]);
+            array_push($cdetails,$challengedetail);
+        }
+        
         $response = [
-            'challenges' => $userchallenges
+            'challenge' => $this->show($id)
         ];
         $code = 200;
 

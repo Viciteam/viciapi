@@ -28,10 +28,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('userprofile','UserProfileController');
 
     #challenges
+    Route::patch('challenge/{challenge_id}','ChallengeController@update');
     Route::resource('challenge','ChallengeController');
     Route::resource('action','ActionController');
     Route::resource('tracking','TrackingController');
     Route::get('/userchallenge/{user_id}','ChallengeController@get_challenge_by_user');
+    Route::get('/gettemplates/{user_id}','ChallengeController@get_challenge_template_per_user');
 
     #Friend List
     Route::resource('friendlist','FriendlistController');
