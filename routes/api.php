@@ -19,6 +19,7 @@ Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/getallchallenges','ChallengeController@get_all_challenges');
 Route::get('/getallchallengeparticipants/{challenge_id}','ParticipantController@get_all_participants');
+Route::get('/getpublicnewsfeed','NewsfeedController@get_public_newsfeed');
 Route::post('/uploadFile','uploadController@upload');
 
 #protected routes
@@ -44,6 +45,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('friendlist','FriendlistController');
     Route::post('/friend/approve/{request_id}','FriendlistController@approve_request');
     Route::post('/friend/follow','FriendlistController@follow_user');
+
+    #Newsfeed
+    Route::patch('newsfeed/{id}','NewsfeedController@update');
+    Route::get('/getnewsfeed/{id}','NewsfeedController@get_user_newsfeed');
+    Route::post('/addreaction/{id}','NewsfeedController@add_reaction');
+    Route::resource('newsfeed','NewsfeedController');
+
+    #Comments
+    Route::patch('newsfeed_comment/{id}','NewsfeedCommentController@update');
+    Route::get('/getnewsfeed_comments/{id}','NewsfeedCommentController@get_post_comments');
+    Route::post('/addreaction_comment/{id}','NewsfeedCommentController@add_reaction');
+    Route::resource('newsfeed_comment','NewsfeedCommentController');
+
+    Route::patch('challenge_comment/{id}','ChallengeCommentController@update');
+    Route::get('/getchallenge_comments/{id}','ChallengeCommentController@get_challenge_comments');
+    Route::post('/addchallengereaction_comment/{id}','ChallengeCommentController@add_reaction');
+    Route::resource('challenge_comment','ChallengeCommentController');
 });
 
 
