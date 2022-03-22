@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('friendlist','FriendlistController');
     Route::post('/friend/approve/{request_id}','FriendlistController@approve_request');
     Route::post('/friend/follow','FriendlistController@follow_user');
+    Route::get('get_friends/{id}','FriendlistController@get_friends');
 
     #Newsfeed
     Route::patch('newsfeed/{id}','NewsfeedController@update');

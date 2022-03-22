@@ -100,9 +100,8 @@ class FriendlistController extends Controller
     public function approve_request($requestid){
         
         $friendrequest =  FriendList::where('id',$requestid)->first();
-
-        if($friendrequest['status'] == 'Pending'){
-            $friendrequest['status'] = 'Approved';
+        if($friendrequest->request_status == 'Pending'){
+            $friendrequest->request_status = 'Approved';
             $friendrequest->update();
 
             #create reverse records
@@ -112,6 +111,13 @@ class FriendlistController extends Controller
                 'request_status' => 'Approved'
             ]);
         }
+        $response = [
+            'Message' => "Request Approved"
+        ];
+
+        $code = 201;
+
+        return response($response, $code);
     }
 
 
@@ -170,5 +176,23 @@ class FriendlistController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function get_friends($id){
+        $user_id = $id;
+        
+        $friendlist = FriendList::where('user_id',$id)->get();
+
+        foreach($friendlist as $friend){
+            $friendlist['profile'] = UserProfile::where('id',$friend['friend_id'])->first();
+        }
+
+        $response = [
+            'friends' => $friendlist
+        ];
+
+        $code = 200;
+
+        return response($response, $code);
     }
 }
