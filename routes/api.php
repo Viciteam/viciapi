@@ -18,6 +18,7 @@ use App\Http\Controllers\AuthController;
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/getallchallenges','ChallengeController@get_all_challenges');
+Route::get('/getallchallengeparticipants/{challenge_id}','ParticipantController@get_all_participants');
 Route::post('/uploadFile','uploadController@upload');
 
 #protected routes
@@ -34,6 +35,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('tracking','TrackingController');
     Route::get('/userchallenge/{user_id}','ChallengeController@get_challenge_by_user');
     Route::get('/gettemplates/{user_id}','ChallengeController@get_challenge_template_per_user');
+
+    #participants
+    Route::patch('participant','ParticipantController@update');
+    Route::resource('participant','ParticipantController');
 
     #Friend List
     Route::resource('friendlist','FriendlistController');

@@ -173,7 +173,7 @@ class ChallengeController extends Controller
     public function get_all_challenges(){
 
         
-        $challenges = Challenge::all();
+        $challenges = Challenge::paginate(10);
         $userchallenges = [];
         foreach($challenges as $challenge){
             $challenge_id = $challenge->id;
@@ -192,7 +192,8 @@ class ChallengeController extends Controller
         }
 
         $response = [
-            'challenges' => $userchallenges
+            'challenges' => $userchallenges,
+            'challenge meta' => $challenges
         ];
         $code = 200;
 
