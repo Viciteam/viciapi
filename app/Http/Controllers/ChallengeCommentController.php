@@ -40,8 +40,8 @@ class ChallengeCommentController extends Controller
             'user_id' => $data['user_id'],
             'challenge_id' => $data['challenge_id'],
             'time' => $data['time'],
-            'post_media' => $data['post_media'],
-            'post_message' => $data['post_message'],
+            'comment_media' => $data['post_media'],
+            'comment_message' => $data['post_message'],
             'likes' => $data['likes'],
             'dislikes' => $data['dislikes'],
             'islikeselected' => $data['islikeselected']
@@ -90,8 +90,8 @@ class ChallengeCommentController extends Controller
         $comment = ChallengeComment::find($id);                
         $comment->user_id = $data["user_id"];
         $comment->time = $data["time"];
-        $comment->post_media = $data["post_media"];
-        $comment->post_message = $data["post_message"];
+        $comment->comment_media = $data["post_media"];
+        $comment->comment_message = $data["post_message"];
         $comment->likes = $data["likes"];
         $comment->dislikes = $data["dislikes"];
         $comment->islikeselected = $data["islikeselected"];
