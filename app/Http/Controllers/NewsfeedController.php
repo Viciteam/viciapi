@@ -129,7 +129,10 @@ class NewsfeedController extends Controller
     }
 
     public function get_public_newsfeed(){
-        $newsfeed = Newsfeed::where('isPrivate',"No")->paginate(10);
+        $newsfeed = Newsfeed::join('user_profiles', 'user_profiles.user_id', '=', 'newsfeeds.user_id')
+        ->where('isPrivate',"No")
+        ->latest('newsfeeds.created_at')
+        ->paginate(10);
         $response = [
             'newsfeed' => $newsfeed
         ];

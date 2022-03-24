@@ -117,7 +117,8 @@ class ChallengeCommentController extends Controller
     }
 
     public function get_challenge_comments($challenge_id){
-        $comments = ChallengeComment::where('challenge_id',$challenge_id)->latest()->paginate(10);
+        $comments = ChallengeComment::join('user_profiles', 'user_profiles.user_id', '=', 'challenge_comments.user_id')->where('challenge_comments.challenge_id',$challenge_id)->latest('challenge_comments.created_at')->paginate(10);
+        
         $response = [
             'comments' => $comments
         ];

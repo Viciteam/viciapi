@@ -181,7 +181,10 @@ class FriendlistController extends Controller
     public function get_friends($id){
         $user_id = $id;
         
-        $friendlist = FriendList::where('user_id',$id)->latest()->get();
+        $friendlist = FriendList::join('user_profiles', 'user_profiles.user_id', '=', 'friend_lists.user_id')
+        ->where('friend_lists.user_id',$id)
+        ->latest('friend_lists.created_at')
+        ->paginate(10);
 
         foreach($friendlist as $friend){
             $friendlist['profile'] = UserProfile::where('id',$friend['friend_id'])->first();

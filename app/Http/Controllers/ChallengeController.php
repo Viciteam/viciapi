@@ -173,7 +173,7 @@ class ChallengeController extends Controller
     public function get_all_challenges(){
 
         
-        $challenges = Challenge::latest()->paginate(10);
+        $challenges = Challenge::join('user_profiles', 'user_profiles.user_id', '=', 'challenges.user_id')->latest('challenges.created_at')->paginate(10);
         $userchallenges = [];
         foreach($challenges as $challenge){
             $challenge_id = $challenge->id;
