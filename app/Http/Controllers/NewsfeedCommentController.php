@@ -117,7 +117,7 @@ class NewsfeedCommentController extends Controller
     }
 
     public function get_post_comments($post_id){
-        $comments = NewsfeedComment::where('post_id',$post_id)->paginate(10);
+        $comments = NewsfeedComment::where('post_id',$post_id)->latest()->paginate(10);
         $response = [
             'comments' => $comments
         ];

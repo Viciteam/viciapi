@@ -117,7 +117,7 @@ class ChallengeCommentController extends Controller
     }
 
     public function get_challenge_comments($challenge_id){
-        $comments = ChallengeComment::where('challenge_id',$challenge_id)->paginate(10);
+        $comments = ChallengeComment::where('challenge_id',$challenge_id)->latest()->paginate(10);
         $response = [
             'comments' => $comments
         ];
