@@ -113,6 +113,7 @@ class ParticipantController extends Controller
 
     public function get_all_participants($challenge_id){
         $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
+        ->select('participants.*','user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user','user_profiles.username as user_name')
         ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
         ->where('challenge_id',$challenge_id)
         ->paginate(10);

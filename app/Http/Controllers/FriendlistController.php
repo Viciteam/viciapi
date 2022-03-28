@@ -182,6 +182,7 @@ class FriendlistController extends Controller
         $user_id = $id;
         
         $friendlist = FriendList::join('user_profiles', 'user_profiles.user_id', '=', 'friend_lists.user_id')
+        ->select('friend_lists.*','user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user','user_profiles.username as user_name')
         ->where('friend_lists.user_id',$id)
         ->latest('friend_lists.created_at')
         ->paginate(10);

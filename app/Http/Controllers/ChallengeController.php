@@ -7,6 +7,7 @@ use App\Models\Challenge;
 use App\Models\ChallengeDetail;
 use App\Models\Action;
 use App\Models\Tracking;
+use App\Models\UserProfile;
 
 class ChallengeController extends Controller
 {
@@ -173,7 +174,11 @@ class ChallengeController extends Controller
     public function get_all_challenges(){
 
         
-        $challenges = Challenge::join('user_profiles', 'user_profiles.user_id', '=', 'challenges.owner_id')->latest('challenges.created_at')->paginate(10);
+        $challenges = Challenge::join('user_profiles', 'user_profiles.user_id', '=', 'challenges.owner_id')
+        ->select('challenges.*','user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user','user_profiles.username as user_name')
+        ->latest('challenges.created_at')
+        ->paginate(10);
+
         $userchallenges = [];
         foreach($challenges as $challenge){
             $challenge_id = $challenge->id;
