@@ -184,6 +184,8 @@ class ChallengeController extends Controller
             $challenge_id = $challenge->id;
 
             $actions = Action::where('challenge_id',$challenge_id)->get();
+            $details = ChallengeDetail::where('challenge_id',$challenge_id)->get();
+            $challenge['challenge_details'] = $details;
             $challenge['actions'] = $actions;
             foreach($actions as $action){
                 $action_id = $action->id;
