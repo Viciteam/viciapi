@@ -88,7 +88,9 @@ class ChallengeController extends Controller
                 $userchallenges = [];
                 foreach($challenges as $challenge){
                     $challenge_id = $challenge->id;
-        
+                    
+                    $details = ChallengeDetail::where('challenge_id',$challenge_id)->get();
+                    $challenge['challenge_details'] = $details;
                     $actions = Action::where('challenge_id',$challenge_id)->get();
                     $challenge['actions'] = $actions;
                     foreach($actions as $action){
