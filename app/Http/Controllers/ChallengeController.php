@@ -99,9 +99,12 @@ class ChallengeController extends Controller
                 $action_id = $action->id;
                 $action_detail = ActionDetail::where('action_id', $action->id)->get();
                 $action['action_details'] = $action_detail;
-                $tracking = Tracking::where('action_id', $action->id)->get();
-
-                $action['trackings'] = $tracking;
+                $trackings = Tracking::where('action_id', $action->id)->get();
+                $action['trackings'] = $trackings;
+                foreach ($trackings as $tracking) {
+                    $tracking_detail = TrackingDetail::where('action_id', $action->id)->get();
+                    $trackings["tracking_detail"] = $tracking_detail;
+                }
             }
 
 
