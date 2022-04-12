@@ -8,6 +8,8 @@ use App\Models\ChallengeDetail;
 use App\Models\Action;
 use App\Models\Tracking;
 use App\Models\UserProfile;
+use App\Models\ActionDetail;
+use App\Models\TrackingDetail;
 
 class ChallengeController extends Controller
 {
@@ -43,7 +45,7 @@ class ChallengeController extends Controller
 
         #save challenge first and get challenge id
 
-        
+
         $challenge = Challenge::create([
             'name' => $data['name'],
             'description' => $data['description'],
@@ -51,17 +53,17 @@ class ChallengeController extends Controller
             'owner_id' => $data['owner_id']
 
         ]);
-        
+
         $challenge_id = $challenge['id'];
         $cdetails = [];
-        foreach($data['details'] as $detail){
+        foreach ($data['details'] as $detail) {
             $challengedetail = ChallengeDetail::create([
                 'challenge_id' => $challenge_id,
                 'field' => $detail['field'],
                 'data' => $detail['data']
-    
+
             ]);
-            array_push($cdetails,$challengedetail);
+            array_push($cdetails, $challengedetail);
         }
 
         $response = [
@@ -81,88 +83,27 @@ class ChallengeController extends Controller
      */
     public function show($id)
     {
-                #get challenges per challenge_id
-                $challenge_id = $id;
-        
-                $challenges = Challenge::where('id',$challenge_id)->get();
-                $userchallenges = [];
-                foreach($challenges as $challenge){
-                    $challenge_id = $challenge->id;
-                    
-                    $details = ChallengeDetail::where('challenge_id',$challenge_id)->get();
-                    $challenge['challenge_details'] = $details;
-                    $actions = Action::where('challenge_id',$challenge_id)->get();
-                    $challenge['actions'] = $actions;
-                    foreach($actions as $action){
-                        $action_id = $action->id;
-                        $tracking = Tracking::where('action_id',$action->id)->get();
-                        
-                        $action['trackings'] = $tracking;
-                    }
-        
-        
-                    array_push($userchallenges,$challenge);
-                }
-        
-                $response = [
-                    'challenges' => $userchallenges
-                ];
-                $code = 200;
-        
-                return response($response, $code);
-    }
+        #get challenges per challenge_id
+        $challenge_id = $id;
 
-    public function get_challenge_by_user($id){
-        $user_id = $id;
-        
-        $challenges = Challenge::where('owner_id',$user_id)->get();
+        $challenges = Challenge::where('id', $challenge_id)->get();
         $userchallenges = [];
-        foreach($challenges as $challenge){
+        foreach ($challenges as $challenge) {
             $challenge_id = $challenge->id;
 
-            $actions = Action::where('challenge_id',$challenge_id)->get();
+            $details = ChallengeDetail::where('challenge_id', $challenge_id)->get();
+            $challenge['challenge_details'] = $details;
+            $actions = Action::where('challenge_id', $challenge_id)->get();
             $challenge['actions'] = $actions;
-            foreach($actions as $action){
+            foreach ($actions as $action) {
                 $action_id = $action->id;
-                $tracking = Tracking::where('action_id',$action->id)->get();
+                $tracking = Tracking::where('action_id', $action->id)->get();
 
                 $action['trackings'] = $tracking;
             }
 
 
-            array_push($userchallenges,$challenge);
-        }
-
-        $response = [
-            'challenges' => $userchallenges
-        ];
-        $code = 200;
-
-        return response($response, $code);
-
-    }
-
-    public function get_challenge_template_per_user($id){
-        $user_id = $id;
-        
-        $challenges = Challenge::where('owner_id',$user_id)
-                    ->where('is_template','yes')
-                    ->get();
-        $userchallenges = [];
-        foreach($challenges as $challenge){
-            $challenge_id = $challenge->id;
-
-            $actions = Action::where('challenge_id',$challenge_id)->get();
-            $challenge['actions'] = $actions;
-            foreach($actions as $action){
-                $action_id = $action->id;
-                $tracking = Tracking::where('action_id',$action->id)->get();
-
-                $action['trackings'] = $tracking;
-            }
-
-
-            array_push($userchallenges,$challenge);
+            array_push($userchallenges, $challenge);
         }
 
         $response = [
@@ -173,31 +114,96 @@ class ChallengeController extends Controller
         return response($response, $code);
     }
 
-    public function get_all_challenges(){
+    public function get_challenge_by_user($id)
+    {
+        $user_id = $id;
 
-        
+        $challenges = Challenge::where('owner_id', $user_id)->get();
+        $userchallenges = [];
+        foreach ($challenges as $challenge) {
+            $challenge_id = $challenge->id;
+
+            $actions = Action::where('challenge_id', $challenge_id)->get();
+            $challenge['actions'] = $actions;
+            foreach ($actions as $action) {
+                $action_id = $action->id;
+                $tracking = Tracking::where('action_id', $action->id)->get();
+
+                $action['trackings'] = $tracking;
+            }
+
+
+            array_push($userchallenges, $challenge);
+        }
+
+        $response = [
+            'challenges' => $userchallenges
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+
+    public function get_challenge_template_per_user($id)
+    {
+        $user_id = $id;
+
+        $challenges = Challenge::where('owner_id', $user_id)
+            ->where('is_template', 'yes')
+            ->get();
+        $userchallenges = [];
+        foreach ($challenges as $challenge) {
+            $challenge_id = $challenge->id;
+
+            $actions = Action::where('challenge_id', $challenge_id)->get();
+            $challenge['actions'] = $actions;
+            foreach ($actions as $action) {
+                $action_id = $action->id;
+                $tracking = Tracking::where('action_id', $action->id)->get();
+
+                $action['trackings'] = $tracking;
+            }
+
+
+            array_push($userchallenges, $challenge);
+        }
+
+        $response = [
+            'challenges' => $userchallenges
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+
+    public function get_all_challenges()
+    {
+
+
         $challenges = Challenge::join('user_profiles', 'user_profiles.user_id', '=', 'challenges.owner_id')
-        ->select('challenges.*','user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user','user_profiles.username as user_name')
-        ->latest('challenges.created_at')
-        ->paginate(10);
+            ->select('challenges.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->latest('challenges.created_at')
+            ->paginate(10);
 
         $userchallenges = [];
-        foreach($challenges as $challenge){
+        foreach ($challenges as $challenge) {
             $challenge_id = $challenge->id;
 
-            $actions = Action::where('challenge_id',$challenge_id)->get();
-            $details = ChallengeDetail::where('challenge_id',$challenge_id)->get();
+            $actions = Action::where('challenge_id', $challenge_id)->get();
+
+            $details = ChallengeDetail::where('challenge_id', $challenge_id)->get();
             $challenge['challenge_details'] = $details;
             $challenge['actions'] = $actions;
-            foreach($actions as $action){
+            foreach ($actions as $action) {
                 $action_id = $action->id;
-                $tracking = Tracking::where('action_id',$action->id)->get();
-
+                $action_detail = ActionDetail::where('action_id', $action->id)->get();
+                $action['action_details'] = $action_detail;
+                $tracking = Tracking::where('action_id', $action->id)->get();
                 $action['trackings'] = $tracking;
             }
 
 
-            array_push($userchallenges,$challenge);
+            array_push($userchallenges, $challenge);
         }
 
         $response = [
@@ -229,28 +235,28 @@ class ChallengeController extends Controller
      */
     public function update(Request $request, $id)
     {
-       
+
         $data = $request->all();
         $challenge = Challenge::find($id);
-        
+
         $challenge->name = $data['name'];
-        $challenge->description= $data['description'];
-        $challenge->is_template= $data['is_template'];
-        $challenge->owner_id= $data['owner_id'];
+        $challenge->description = $data['description'];
+        $challenge->is_template = $data['is_template'];
+        $challenge->owner_id = $data['owner_id'];
         $challenge->save();
 
         $challenge_id = $challenge['id'];
         $cdetails = [];
-        foreach($data['details'] as $detail){
+        foreach ($data['details'] as $detail) {
             $challengedetail = ChallengeDetail::create([
                 'challenge_id' => $challenge_id,
                 'field' => $detail['field'],
                 'data' => $detail['data']
-    
+
             ]);
-            array_push($cdetails,$challengedetail);
+            array_push($cdetails, $challengedetail);
         }
-        
+
         $response = [
             'challenge' => $this->show($id)
         ];
