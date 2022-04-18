@@ -19,6 +19,9 @@ Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/getallchallenges','ChallengeController@get_all_challenges');
 Route::get('/getallchallengeparticipants/{challenge_id}','ParticipantController@get_all_participants');
+Route::get('/getallactivechallengeparticipants/{challenge_id}','ParticipantController@get_all_active_participants');
+Route::get('/getallquitchallengeparticipants/{challenge_id}','ParticipantController@get_all_quit_participants');
+Route::get('/getallinactivechallengeparticipants/{challenge_id}','ParticipantController@get_all_not_active_participants');
 Route::get('/getpublicnewsfeed','NewsfeedController@get_public_newsfeed');
 Route::post('/uploadFile','uploadController@upload');
 
