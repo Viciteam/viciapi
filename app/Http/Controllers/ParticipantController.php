@@ -142,6 +142,7 @@ class ParticipantController extends Controller
 
         return response($response, $code);
     }
+
     public function get_all_quit_participants($challenge_id)
     {
         $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
@@ -157,6 +158,7 @@ class ParticipantController extends Controller
 
         return response($response, $code);
     }
+
     public function get_all_not_active_participants($challenge_id)
     {
         $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
@@ -164,6 +166,22 @@ class ParticipantController extends Controller
             ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
             ->where('challenge_id', $challenge_id)
             ->where('status','!=', 'Active')
+            ->paginate(10);
+        $response = [
+            'participants' => $participants
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+
+    public function get_participants($challenge_id,$status)
+    {
+        $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
+            ->select('participants.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
+            ->where('challenge_id', $challenge_id)
+            ->where('status', $status)
             ->paginate(10);
         $response = [
             'participants' => $participants
