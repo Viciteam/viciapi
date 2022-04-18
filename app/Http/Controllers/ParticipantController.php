@@ -84,12 +84,12 @@ class ParticipantController extends Controller
     {
         $data = $request->all();
 
-        $participanttemp = Participant::where('user_id',$data["user_id"])
-                        ->where('challenge_id',$data["challenge_id"])
-                        ->first()->get(['id']);
+        $participanttemp = Participant::where('user_id', $data["user_id"])
+            ->where('challenge_id', $data["challenge_id"])
+            ->first()->get(['id']);
         # die(json_encode($participanttemp[0]->id));
 
-        $participant = Participant::find($participanttemp[0]->id);                
+        $participant = Participant::find($participanttemp[0]->id);
         $participant->status = $data["status"];
         $participant->save();
         $response = [
@@ -97,7 +97,7 @@ class ParticipantController extends Controller
         ];
         $code = 200;
 
-        return response($response, $code);                
+        return response($response, $code);
     }
 
     /**
@@ -111,12 +111,60 @@ class ParticipantController extends Controller
         //
     }
 
-    public function get_all_participants($challenge_id){
+    public function get_all_participants($challenge_id)
+    {
         $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
-        ->select('participants.*','user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user','user_profiles.username as user_name')
-        ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
-        ->where('challenge_id',$challenge_id)
-        ->paginate(10);
+            ->select('participants.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
+            ->where('challenge_id', $challenge_id)
+            ->paginate(10);
+        $response = [
+            'participants' => $participants
+        ];
+        $code = 200;
+
+
+        return response($response, $code);
+    }
+
+    public function get_all_active_participants($challenge_id)
+    {
+        $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
+            ->select('participants.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
+            ->where('challenge_id', $challenge_id)
+            ->where('status', 'Active')
+            ->paginate(10);
+        $response = [
+            'participants' => $participants
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+    public function get_all_quit_participants($challenge_id)
+    {
+        $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
+            ->select('participants.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
+            ->where('challenge_id', $challenge_id)
+            ->where('status', 'Quit')
+            ->paginate(10);
+        $response = [
+            'participants' => $participants
+        ];
+        $code = 200;
+
+        return response($response, $code);
+    }
+    public function get_all_not_active_participants($challenge_id)
+    {
+        $participants = Participant::join('user_profiles', 'user_profiles.user_id', '=', 'participants.user_id')
+            ->select('participants.*', 'user_profiles.profpic_link as profpic_link', 'user_profiles.name as name_of_user', 'user_profiles.username as user_name')
+            ->join('challenges', 'challenges.id', '=', 'participants.challenge_id')
+            ->where('challenge_id', $challenge_id)
+            ->where('status','!=', 'Active')
+            ->paginate(10);
         $response = [
             'participants' => $participants
         ];
